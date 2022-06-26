@@ -1,0 +1,7 @@
+#!/bin/bash
+cd ~/DWM/dwm
+vim config.def.h
+rm config.h
+make
+sudo make uninstall
+sudo make install

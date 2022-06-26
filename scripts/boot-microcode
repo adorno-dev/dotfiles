@@ -1,0 +1,2 @@
+#!/bin/bash
+sudo sed -i s/"initrd"/"initrd \/boot\/intel-ucode.cpio \/boot\/i915-firmware.cpio.xz"/g /boot/grub/grub.cfg

@@ -1,0 +1,7 @@
+#!/bin/bash
+cd ~/DWM/dwmblocks
+vim blocks.def.h
+rm blocks.h
+make
+sudo make uninstall
+sudo make install

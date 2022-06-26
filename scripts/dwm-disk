@@ -1,0 +1,2 @@
+#!/bin/bash
+df -h | grep /$ | xargs | cut -d' ' -f3,2 | tac -b -s ' ' | xargs | sed s/' '/'\/'/g
