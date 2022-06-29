@@ -1,6 +1,9 @@
 working_directory: ~
 window:
   opacity: 0.90
+  dimensions:
+    columns: 145
+    lines: 30
   padding:
     x: 10
     y: 10
