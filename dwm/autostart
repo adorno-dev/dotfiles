@@ -1,14 +1,14 @@
 #!/bin/bash
 xrandr --output eDP1 --mode 1920x1080 --left-of HDMI1 --mode 1920x1080
-#xrandr --output HDMI-1-1 --mode 1920x1080 --right-of eDP-1-1 --mode 1920x1080
+xrandr --output HDMI-1 --mode 1920x1080 --right-of eDP-1 --mode 1920x1080
 xinput --set-prop 14 "Device Enabled" 0
 xset s off
 xset -dpms
 numlockx on
-dwmblocks &
-feh --no-fehbg --bg-fill ~/Pictures/Wallpapers/Cool-Abstract-4K-1920x1080.jpg \
-               --bg-fill ~/Pictures/Wallpapers/Cool-Abstract-4K-1920x1080.jpg
+#dwmblocks &
+nitrogen --restore &
 #xcompmgr &
 #mpd ~/.config/mpd/mpd.conf
-#picom --experimental-backends &
+picom --experimental-backends &
+exec slstatus &
 #wallpaper-wrap &
