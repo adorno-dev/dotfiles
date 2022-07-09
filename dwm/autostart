@@ -1,9 +1,14 @@
 #!/bin/bash
-xrandr --output eDP1 --mode 1920x1080 --left-of HDMI1 --mode 1920x1080
-xrandr --output HDMI-1 --mode 1920x1080 --right-of eDP-1 --mode 1920x1080
-xinput --set-prop 14 "Device Enabled" 0
+
+# NVIDIA
+xrandr --output eDP-1-1  --mode 1920x1080
+xrandr --output HDMI-1-1 --mode 1920x1080
+xrandr --output eDP-1-1 --left-of HDMI-1-1
+
+#xrandr --output HDMI-1 --mode 1920x1080 --right-of eDP-1 --mode 1920x1080
+xinput --set-prop 13 "Device Enabled" 0
 xset s off
-xset -dpms
+#xset -dpms
 numlockx on
 #dwmblocks &
 nitrogen --restore &
