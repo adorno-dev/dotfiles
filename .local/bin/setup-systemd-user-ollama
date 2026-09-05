@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -e
+
+SERVICE_DIR="$HOME/.config/systemd/user"
+SERVICE_FILE="$SERVICE_DIR/ollama.service"
+
+mkdir -p "$SERVICE_DIR"
+
+cat > "$SERVICE_FILE" <<EOF
+[Unit]
+Description=Ollama Service
+
+[Service]
+ExecStart=/usr/bin/ollama serve
+Restart=on-failure
+Environment="OLLAMA_HOST=127.0.0.1:11434"
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable --now ollama
+
+echo "Ollama user service enabled."

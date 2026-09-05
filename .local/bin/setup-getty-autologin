@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+set -e
+
+DIR=/etc/systemd/system/getty@tty1.service.d
+FILE=$DIR/autologin.conf
+USER_NAME=${SUDO_USER:-$USER}
+
+case "$1" in
+install)
+sudo mkdir -p "$DIR"
+sudo tee "$FILE" >/dev/null <<EOF
+[Service]
+ExecStart=
+ExecStart=-/sbin/agetty -o '-p -f -- \\u' --noclear --autologin $USER_NAME - $TERM
+EOF
+;;
+
+remove)
+    sudo rm -f "$FILE"
+    sudo rmdir "$DIR" 2>/dev/null || true
+    ;;
+
+*)
+    echo "Usage: $0 {install|remove}"
+    exit 1
+    ;;
+
+esac

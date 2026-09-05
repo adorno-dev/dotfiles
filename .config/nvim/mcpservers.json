@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "~/Sources"],
+      "env": {},
+      "disabled": false
+    },
+    "nvim": {
+      "command": "npx",
+      "args": ["nvim-mcp-server"],
+      "env": {},
+      "disabled": false
+    },
+    "git": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-git"],
+      "env": {},
+      "disabled": false
+    }
+  }
+}

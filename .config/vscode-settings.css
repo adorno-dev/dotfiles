@@ -1,0 +1,37 @@
+.monaco-workbench,
+.monaco-workbench * {
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    text-rendering: optimizeLegibility !important;
+
+    /* text-shadow: 
+        0.25px 0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px 0.25px 0.25px rgba(0,0,0,0.25) !important; */
+
+    font-weight: 600 !important;
+}
+
+.monaco-shell {
+    font-family: 'SF Pro Display', 'Noto Sans', 'DejaVu Sans', sans-serif !important;
+    font-weight: 600 !important;
+
+    /* text-shadow: 
+        0.25px 0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px 0.25px 0.25px rgba(0,0,0,0.25) !important; */
+}
+
+.monaco-menu,
+.sidebar,
+.editor-instance {
+    font-weight: 600 !important;
+
+    /* text-shadow: 
+        0.25px 0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        0.25px -0.25px 0.25px rgba(0,0,0,0.25),
+        -0.25px 0.25px 0.25px rgba(0,0,0,0.25) !important; */
+}

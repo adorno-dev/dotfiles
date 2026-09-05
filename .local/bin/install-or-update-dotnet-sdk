@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -e
+
+TARGET="$HOME/.local/apps/dotnet"
+TMP="/tmp/dotnet-menu"
+INDEX_URL="https://builds.dotnet.microsoft.com/dotnet/release-metadata/releases-index.json"
+
+mkdir -p "$TARGET" "$TMP"
+
+curl -sSL "$INDEX_URL" -o "$TMP/index.json"
+
+CHANNELS=($(jq -r '.["releases-index"][] | select(."releases.json" != null) | .["channel-version"]' "$TMP/index.json"))
+
+if [ ${#CHANNELS[@]} -eq 0 ]; then
+    echo "Error: No .NET releases found."
+    exit 1
+fi
+
+echo "Available .NET channels:"
+for i in "${!CHANNELS[@]}"; do
+    echo "[$i] ${CHANNELS[$i]}"
+done
+
+read -p "Select channel: " CHOICE
+
+if ! [[ "$CHOICE" =~ ^[0-9]+$ ]] || ((CHOICE < 0 || CHOICE >= ${#CHANNELS[@]})); then
+    echo "Error: Invalid selection."
+    exit 1
+fi
+
+LINE="${CHANNELS[$CHOICE]}"
+RELEASES_JSON=$(jq -r ".\"releases-index\"[] | select(.\"channel-version\"==\"$LINE\") | .\"releases.json\"" "$TMP/index.json")
+
+curl -sSL "$RELEASES_JSON" -o "$TMP/releases.json"
+
+VERSION=$(jq -r '.releases[0].sdk.version' "$TMP/releases.json")
+URL=$(jq -r '.releases[0].sdk.files[] | select(.rid=="linux-x64") | .url' "$TMP/releases.json")
+
+echo "Installing .NET $VERSION..."
+curl -sSL "$URL" -o "$TMP/dotnet.tar.gz"
+
+rm -rf "$TARGET/sdk/$LINE."*
+tar -xzf "$TMP/dotnet.tar.gz" -C "$TARGET"
+
+echo "Done: .NET $VERSION"
+echo ""
+echo "Add the following to ~/.bashrc or ~/.zshrc:"
+echo 'export DOTNET_ROOT="$HOME/.local/apps/dotnet"'
+echo 'export DOTNET_TOOLS="$HOME/.dotnet/tools"'
+echo "export DOTNET_CLI_TELEMETRY_OPTOUT=true"
+echo 'export PATH="$DOTNET_ROOT:$PATH"'

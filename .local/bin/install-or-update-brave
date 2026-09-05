@@ -1,0 +1,76 @@
+#!/usr/bin/env bash
+set -e
+
+# Dependencies:
+# sudo pacman -S curl binutils
+
+INSTALL_DIR="$HOME/.local/apps/brave"
+DESKTOP_FILE="$HOME/.local/share/applications/brave.desktop"
+
+TMP_DIR=$(mktemp -d)
+
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+echo "Getting the latest Brave release..."
+
+RELEASE_URL=$(
+    curl -fsSL \
+        -H "Accept: application/vnd.github+json" \
+        "https://api.github.com/repos/brave/brave-browser/releases/latest" |
+    grep '"browser_download_url":' |
+    grep 'amd64.deb' |
+    cut -d '"' -f 4 |
+    head -n 1
+)
+
+if [ -z "$RELEASE_URL" ]; then
+    echo "Failed to find the latest Brave .deb."
+    exit 1
+fi
+
+DEB_FILE="$TMP_DIR/brave.deb"
+
+echo "Downloading the latest Brave..."
+curl -fL "$RELEASE_URL" -o "$DEB_FILE"
+
+echo "Extracting Brave..."
+
+mkdir -p "$TMP_DIR/deb"
+cd "$TMP_DIR/deb"
+
+ar x "$DEB_FILE"
+
+DATA_FILE=$(find . -maxdepth 1 -name 'data.tar.*' -print -quit)
+
+if [ -z "$DATA_FILE" ]; then
+    echo "Failed to find Brave data archive."
+    exit 1
+fi
+
+echo "Installing Brave..."
+
+mkdir -p "$INSTALL_DIR"
+rm -rf "$INSTALL_DIR"/*
+tar -xf "$DATA_FILE" -C "$INSTALL_DIR"
+
+echo "Creating desktop entry..."
+
+mkdir -p "$(dirname "$DESKTOP_FILE")"
+
+cat > "$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Name=Brave Browser
+Comment=Web Browser
+Exec=$INSTALL_DIR/opt/brave.com/brave/brave-browser %U
+Icon=$INSTALL_DIR/opt/brave.com/brave/product_logo_128.png
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true
+EOF
+
+update-desktop-database "$HOME/.local/share/applications" >/dev/null 2>&1 || true
+
+echo "Brave installation completed."
+echo "Installed to: $INSTALL_DIR"

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+set -e
+
+INSTALL_DIR="$HOME/.local/apps/vscode"
+DESKTOP_FILE="$HOME/.local/share/applications/vscode.desktop"
+DOWNLOAD_URL="https://update.code.visualstudio.com/latest/linux-x64/stable"
+TMP_FILE=$(mktemp)
+
+trap 'rm -f "$TMP_FILE"' EXIT
+
+echo "Downloading the latest VS Code..."
+curl -fsSL "$DOWNLOAD_URL" -o "$TMP_FILE"
+
+echo "Installing VS Code..."
+mkdir -p "$INSTALL_DIR"
+rm -rf "$INSTALL_DIR"/*
+tar -xzf "$TMP_FILE" -C "$INSTALL_DIR" --strip-components=1
+
+echo "Creating desktop entry..."
+mkdir -p "$(dirname "$DESKTOP_FILE")"
+
+cat > "$DESKTOP_FILE" <<EOF
+[Desktop Entry]
+Name=Visual Studio Code
+Comment=Code Editing. Redefined.
+Exec=$INSTALL_DIR/bin/code %F
+Icon=$INSTALL_DIR/resources/app/resources/linux/code.png
+Terminal=false
+Type=Application
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=text/plain;inode/directory;
+StartupNotify=true
+EOF
+
+update-desktop-database "$HOME/.local/share/applications" >/dev/null 2>&1 || true
+
+echo "VS Code installation completed."
+echo "Installed to: $INSTALL_DIR"
