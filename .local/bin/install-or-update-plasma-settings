@@ -1,0 +1,17 @@
+#!/bin/bash
+
+sudo pacman -S \
+    kde-gtk-config \
+    qt5ct \
+    qt6ct \
+    breeze \
+    breeze-icons \
+    dolphin \
+    dolphin-plugins \
+    konsole \
+    gwenview \
+    okular \
+    ark \
+    kate \
+    xcursor-vanilla-dmz-aa \
+    nwg-look
